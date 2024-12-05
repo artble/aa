@@ -48,3 +48,8 @@ make -j -C obj_dir
 Symulacja: Uruchom symulację przy użyciu:
 
 ./obj_dir/Vtestbench
+
+
+
+
+-+0(OVF)
