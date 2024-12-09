@@ -1,16 +1,13 @@
 module testbench;
 
-    // Rejestry wejściowe
-    reg signed [9:0] i_arg0; // 10-bitowy rejestr wejściowy
-    reg signed [9:0] i_arg1; // 10-bitowy rejestr wejściowy
-    reg [2:0] i_oper;        // Kod operacji (3 bity)
-    
-    // Rejestry wyjściowe
-    wire signed [9:0] o_result; // 10-bitowy wynik operacji
-    wire [3:0] o_flag;         // Flagi (4 bity)
+    reg signed [11:0] i_arg0;         // Wejście 12-bitowe
+    reg signed [11:0] i_arg1;         // Wejście 12-bitowe
+    reg [2:0] i_oper;                 // Kod operacji (3 bity)
+    wire signed [9:0] o_result;       // Wynik 10-bitowy
+    wire [3:0] o_flag;                // Flagi (4 bity)
 
     // Instancja modułu ALU
-    ALU alu1 (
+    ALU alu (
         .i_arg0(i_arg0), 
         .i_arg1(i_arg1), 
         .i_oper(i_oper), 
@@ -18,65 +15,58 @@ module testbench;
         .o_flag(o_flag)
     );
 
-    // Inicjalizacja i wykonywanie testów
+    // Inicjalizacja i wykonanie testów
     initial begin
-        // Test 1: Dodawanie (512 + 512)
-        i_arg0 = 10'sd512;
-        i_arg1 = 10'sd512;
-        i_oper = 3'b000; // Kod operacji: dodawanie
-        #10; // Czekanie 10 jednostek czasowych
-        $display("Test 1: Dodawanie (512 + 512) => wynik = %d, flagi = %b", o_result, o_flag);
-
-        // Test 2: Dodawanie (0 + 1)
-        i_arg0 = 10'sd0;
-        i_arg1 = 10'sd1;
-        i_oper = 3'b000; // Kod operacji: dodawanie
+        // Test 1: Dodawanie (1000 + 2000)
+        i_arg0 = 12'sd1000;
+        i_arg1 = 12'sd2000;
+        i_oper = 3'b000; // Operacja dodawania
         #10;
-        $display("Test 2: Dodawanie (0 + 1) => wynik = %d, flagi = %b", o_result, o_flag);
+        $display("Test 1: Dodawanie (1000 + 2000) => wynik = %d, flagi = %b", o_result, o_flag);
 
-        // Test 3: Odejmowanie (1 - 10)
-        i_arg0 = 10'sd1;
-        i_arg1 = 10'sd10;
-        i_oper = 3'b001; // Kod operacji: odejmowanie
+        // Test 2: Odejmowanie (-1000 - 500)
+        i_arg0 = 12'sd-1000;
+        i_arg1 = 12'sd500;
+        i_oper = 3'b001; // Operacja odejmowania
         #10;
-        $display("Test 3: Odejmowanie (1 - 10) => wynik = %d, flagi = %b", o_result, o_flag);
+        $display("Test 2: Odejmowanie (-1000 - 500) => wynik = %d, flagi = %b", o_result, o_flag);
 
-        // Test 4: Przesunięcie w lewo (2 << 1)
-        i_arg0 = 10'sd2;
-        i_arg1 = 10'sd1;
-        i_oper = 3'b011; // Kod operacji: przesunięcie
+        // Test 3: Mnożenie (100 * 100)
+        i_arg0 = 12'sd100;
+        i_arg1 = 12'sd100;
+        i_oper = 3'b100; // Operacja mnożenia
         #10;
-        $display("Test 4: Przesunięcie w lewo (2 << 1) => wynik = %d, flagi = %b", o_result, o_flag);
+        $display("Test 3: Mnożenie (100 * 100) => wynik = %d, flagi = %b", o_result, o_flag);
 
-        // Test 5: Operacja AND (5 & 3)
-        i_arg0 = 10'sd5;
-        i_arg1 = 10'sd3;
-        i_oper = 3'b010; // Kod operacji: AND
+        // Test 4: Dzielenie (100 / 10)
+        i_arg0 = 12'sd100;
+        i_arg1 = 12'sd10;
+        i_oper = 3'b101; // Operacja dzielenia
         #10;
-        $display("Test 5: Operacja AND (5 & 3) => wynik = %d, flagi = %b", o_result, o_flag);
-        
-        // Test 6: Operacja OR (7 | 2)
-        i_arg0 = 10'sd7;
-        i_arg1 = 10'sd2;
-        i_oper = 3'b110; // Kod operacji: OR
-        #10;
-        $display("Test 6: Operacja OR (7 | 2) => wynik = %d, flagi = %b", o_result, o_flag);
+        $display("Test 4: Dzielenie (100 / 10) => wynik = %d, flagi = %b", o_result, o_flag);
 
-        // Test 7: Operacja XOR (7 ^ 2)
-        i_arg0 = 10'sd7;
-        i_arg1 = 10'sd2;
-        i_oper = 3'b111; // Kod operacji: XOR
+        // Test 5: Dzielenie przez zero (100 / 0)
+        i_arg0 = 12'sd100;
+        i_arg1 = 12'sd0;
+        i_oper = 3'b101; // Operacja dzielenia
         #10;
-        $display("Test 7: Operacja XOR (7 ^ 2) => wynik = %d, flagi = %b", o_result, o_flag);
+        $display("Test 5: Dzielenie przez zero (100 / 0) => wynik = %d, flagi = %b", o_result, o_flag);
 
-        // Test 8: Odejmowanie (8 - 8)
-        i_arg0 = 10'sd8;
-        i_arg1 = 10'sd8;
-        i_oper = 3'b001; // Kod operacji: odejmowanie
+        // Test 6: AND (5 & 3)
+        i_arg0 = 12'sd5;
+        i_arg1 = 12'sd3;
+        i_oper = 3'b010; // Operacja AND
         #10;
-        $display("Test 8: Odejmowanie (8 - 8) => wynik = %d, flagi = %b", o_result, o_flag);
+        $display("Test 6: AND (5 & 3) => wynik = %d, flagi = %b", o_result, o_flag);
 
-        // Zakończenie symulacji
+        // Test 7: Flaga przepełnienia przy mnożeniu (500 * 500)
+        i_arg0 = 12'sd500;
+        i_arg1 = 12'sd500;
+        i_oper = 3'b100; // Operacja mnożenia
+        #10;
+        $display("Test 7: Flaga przepełnienia przy mnożeniu (500 * 500) => wynik = %d, flagi = %b", o_result, o_flag);
+
+        // Koniec symulacji
         $finish;
     end
 
