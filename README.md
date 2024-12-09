@@ -1,5 +1,7 @@
 # aa
 iverilog -o my_simulation.vvp SCKPROJ.v testbench.v
+
+iverilog -o my_simulation.vvp SCKPROJ.v testbench.v
 vvp my_simulation.vvp
 
 Kroki kompilacji i symulacji w VCS (Synopsys)
